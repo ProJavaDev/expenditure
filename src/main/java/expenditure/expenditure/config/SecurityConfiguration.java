@@ -56,9 +56,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @PostConstruct
     public void create() {
-        Role role=new Role();
+        Role role = new Role();
+        roleRepository.deleteAll();
+        role.setId(1l);
         role.setName("ROLE_ADMIN");
+        roleRepository.save(role);
+        role = new Role();
         role.setName("ROLE_USER");
+        role.setId(2l);
         roleRepository.save(role);
     }
 

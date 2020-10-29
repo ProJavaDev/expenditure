@@ -9,5 +9,6 @@ import javax.persistence.Id;
 public class Role {
 
     @Id
+    private Long id;
     private String name;
 }
