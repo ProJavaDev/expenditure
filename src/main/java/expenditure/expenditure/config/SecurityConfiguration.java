@@ -1,5 +1,8 @@
 package expenditure.expenditure.config;
 
+import expenditure.expenditure.entity.Role;
+import expenditure.expenditure.repository.RoleRepository;
+import expenditure.expenditure.repository.UserRepository;
 import expenditure.expenditure.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,13 +14,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
+    private final RoleRepository roleRepository;
 
-    public SecurityConfiguration(CustomUserDetailService userDetailsService) {
+    public SecurityConfiguration(CustomUserDetailService userDetailsService, UserRepository userRepository, RoleRepository roleRepository) {
         this.userDetailsService = userDetailsService;
+
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -43,6 +51,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
+    }
+
+
+    @PostConstruct
+    public void create() {
+        Role role=new Role();
+        role.setName("ROLE_ADMIN");
+        role.setName("ROLE_USER");
+        roleRepository.save(role);
     }
 
     @Bean
