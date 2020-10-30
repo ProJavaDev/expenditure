@@ -58,12 +58,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void create() {
         Role role = new Role();
         roleRepository.deleteAll();
-        role.setId(1L);
+//        role.setId(1L);
         role.setName("ROLE_ADMIN");
         roleRepository.save(role);
         role = new Role();
         role.setName("ROLE_USER");
-        role.setId(2L);
+//        role.setId(2L);
         roleRepository.save(role);
     }
 
