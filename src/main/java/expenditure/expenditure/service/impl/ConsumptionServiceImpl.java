@@ -64,7 +64,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
 
             repository.save(consumption);
         } else {
-            return null;
+            throw new  RuntimeException(" You only edited Consumption yourself! ");
         }
         return ConsumptionDto.toDto(consumption);
     }
@@ -93,6 +93,6 @@ public class ConsumptionServiceImpl implements ConsumptionService {
             return consumptionHistoryRepository.findByConsumption_Id(id)
                     .stream().map(ConsumptionDto::toDtoHis).collect(Collectors.toList());
         }
-        return null;
+        throw new RuntimeException("Consumption not found: " + id);
     }
 }

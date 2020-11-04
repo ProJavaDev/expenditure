@@ -1,4 +1,5 @@
 package expenditure.expenditure.entity;
+import expenditure.expenditure.entity.enurmation.Status;
 import lombok.Data;
 
 
@@ -15,7 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
-    private String password;
+    private String  password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
