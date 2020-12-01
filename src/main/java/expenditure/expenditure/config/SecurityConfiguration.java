@@ -2,17 +2,16 @@ package expenditure.expenditure.config;
 
 import expenditure.expenditure.entity.Role;
 import expenditure.expenditure.repository.RoleRepository;
-import expenditure.expenditure.repository.UserRepository;
+import expenditure.expenditure.security.JwtConfigurer;
+import expenditure.expenditure.security.JwtTokenProvider;
 import expenditure.expenditure.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 
@@ -20,19 +19,25 @@ import javax.annotation.PostConstruct;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RoleRepository roleRepository;
 
-    public SecurityConfiguration(CustomUserDetailService userDetailsService, UserRepository userRepository, RoleRepository roleRepository) {
+    public SecurityConfiguration(CustomUserDetailService userDetailsService, JwtTokenProvider jwtTokenProvider, RoleRepository roleRepository) {
         this.userDetailsService = userDetailsService;
+        this.jwtTokenProvider = jwtTokenProvider;
 
         this.roleRepository = roleRepository;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
+    //    @Override
+    //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    //        auth
+    //                .userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    //    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,28 +50,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/register").permitAll()
-                .antMatchers("/api/v1/spend/get-all").hasRole("ADMIN")
-                .antMatchers("/api/v1/spend/edit-all").hasRole("ADMIN")
-                .antMatchers("/api/v1/spend").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/api/v1/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .cors()
+                .and()
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
 
     @PostConstruct
     public void create() {
-        Role role = new Role();
-        roleRepository.deleteAll();
-        role.setName("ROLE_ADMIN");
-        roleRepository.save(role);
-        role = new Role();
-        role.setName("ROLE_USER");
-        roleRepository.save(role);
+        if (roleRepository.count() == 0) {
+            Role role = new Role();
+            roleRepository.deleteAll();
+            role.setName("ROLE_ADMIN");
+            roleRepository.save(role);
+            role = new Role();
+            role.setName("ROLE_USER");
+            roleRepository.save(role);
+        }
     }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 }

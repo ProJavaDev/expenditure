@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import expenditure.expenditure.entity.Consumption;
 
 import expenditure.expenditure.entity.ConsumptionHistory;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConsumptionDto {
 
@@ -18,33 +20,24 @@ public class ConsumptionDto {
     private String name;
     private String price;
     private Boolean edited;
-    private String eComment;
+    private String editComment;
     private Long userId;
-    private Date createdDate;
-    private Date updatedDate;
+    private Long createdDate;
+    private Long updatedDate;
+    private Long groupId;
 
-    public ConsumptionDto(Long id, String name, String price, Long userId, Date createdDate, Date updatedDate) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.edited = edited;
-        this.eComment = eComment;
-        this.userId = userId;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-    }
 
     public static ConsumptionDto toDto(Consumption consumption) {
         ConsumptionDto consumptionDto = new ConsumptionDto(
                 consumption.getId(),
                 consumption.getName(),
                 consumption.getPrice(),
+                consumption.getEdited(),
+                consumption.getEditComment(),
                 consumption.getUserId(),
-                consumption.getCreatedDate(),
-                consumption.getUpdatedDate()
-
-
-        );
+                (consumption.getCreatedDate()==null) ? new Date().getTime() : consumption.getCreatedDate().getTime(),
+                null,
+                consumption.getGroupId());
         return consumptionDto;
     }
 
@@ -53,9 +46,12 @@ public class ConsumptionDto {
                 consumptionHistory.getId(),
                 consumptionHistory.getName(),
                 consumptionHistory.getPrice(),
+                consumptionHistory.getEdited(),
+                consumptionHistory.getEditComment(),
                 consumptionHistory.getUserId(),
-                consumptionHistory.getCreatedDate(),
-                consumptionHistory.getUpdatedDate()
+                consumptionHistory.getCreatedDate().getTime(),
+                consumptionHistory.getUpdatedDate().getTime(),
+                consumptionHistory.getGroupId()
         );
         return consumptionDto;
     }

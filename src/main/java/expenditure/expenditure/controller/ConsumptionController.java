@@ -1,21 +1,25 @@
 package expenditure.expenditure.controller;
 
 import expenditure.expenditure.dto.ConsumptionDto;
+import expenditure.expenditure.exception.UserRoleNotFoundException;
 import expenditure.expenditure.service.ConsumptionService;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/spend")
 public class ConsumptionController {
+
     private final ConsumptionService service;
 
     public ConsumptionController(ConsumptionService consumptionService) {
         this.service = consumptionService;
     }
 
-    @PostMapping
+    @PostMapping("add")
     public ConsumptionDto add(@RequestBody ConsumptionDto dto) {
         return service.add(dto);
     }
@@ -25,13 +29,13 @@ public class ConsumptionController {
         return service.edit(id, dto);
     }
 
-    @GetMapping
+    @GetMapping("all")
     public List<ConsumptionDto> getUserId() {
         return service.getMyConsumptions();
     }
 
     @GetMapping("get-all")
-    public List<ConsumptionDto> getAll() {
+    public List<ConsumptionDto> getAll()  {
         return service.findAll();
     }
 
@@ -42,7 +46,20 @@ public class ConsumptionController {
 
     @GetMapping("{id}")
     public List<ConsumptionDto> getAllEdit(@PathVariable Long id) {
-        return service.getMyEditConsumptions(id);
+        return service.getConsumptionHistoryById(id);
     }
 
+    @GetMapping("date/history")
+    public List<ConsumptionDto> getConsumptionHistoryByDate(@RequestParam Long date, Long date2){
+        return service.getConsumptionHistoryByDate(date,date2);
+    }
+    @GetMapping("date")
+    public List<ConsumptionDto> getConsumptionByDate(@RequestParam Long date, Long date2){
+        return service.getConsumptionByDate(date,date2);
+    }
+
+    @GetMapping("group/{id}")
+    public  List<ConsumptionDto> getConsumptionByGroupId(@PathVariable Long id){
+        return service.getConsumptionByGroupId(id);
+    }
 }
