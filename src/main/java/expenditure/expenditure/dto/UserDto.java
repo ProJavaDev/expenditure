@@ -1,6 +1,5 @@
 package expenditure.expenditure.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import expenditure.expenditure.entity.Role;
 import expenditure.expenditure.entity.User;
 import lombok.AllArgsConstructor;

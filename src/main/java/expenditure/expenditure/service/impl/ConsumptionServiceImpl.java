@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
@@ -75,7 +74,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
             consumption.setEdited(true);
 
             repository.save(consumption);
-            
+
         } else {
             throw new YourConsumptionNotFoundException(" You only edited Consumption yourself! ");
         }
@@ -123,20 +122,20 @@ public class ConsumptionServiceImpl implements ConsumptionService {
     @Override
     public List<ConsumptionDto> getConsumptionHistoryByDate(Long date, Long date2) {
 
-        Date date1=new Date(date);
-        Date date3=new Date(date2);
+        Date date1 = new Date(date);
+        Date date3 = new Date(date2);
 
-        return consumptionHistoryRepository.findByCreatedDateGreaterThanAndCreatedDateLessThanAndUserId(date1,date3, userServiceImpl.currentUser().getId())
+        return consumptionHistoryRepository.findByCreatedDateGreaterThanAndCreatedDateLessThanAndUserId(date1, date3, userServiceImpl.currentUser().getId())
                 .stream().map(ConsumptionDto::toDtoHis).collect(Collectors.toList());
     }
 
     @Override
     public List<ConsumptionDto> getConsumptionByDate(Long date, Long date2) {
 
-        Date date1=new Date(date);
-        Date date3=new Date(date2);
+        Date date1 = new Date(date);
+        Date date3 = new Date(date2);
 
-        return repository.findByCreatedDateGreaterThanAndCreatedDateLessThanAndUserId(date1,date3, userServiceImpl.currentUser().getId())
+        return repository.findByCreatedDateGreaterThanAndCreatedDateLessThanAndUserId(date1, date3, userServiceImpl.currentUser().getId())
                 .stream().map(ConsumptionDto::toDto).collect(Collectors.toList());
     }
 
