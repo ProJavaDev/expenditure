@@ -1,12 +1,10 @@
 package expenditure.expenditure.controller;
 
 import expenditure.expenditure.dto.ConsumptionDto;
-import expenditure.expenditure.exception.UserRoleNotFoundException;
 import expenditure.expenditure.service.ConsumptionService;
-import org.springframework.data.repository.query.Param;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

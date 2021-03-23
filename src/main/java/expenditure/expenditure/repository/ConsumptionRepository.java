@@ -1,7 +1,6 @@
 package expenditure.expenditure.repository;
 
 import expenditure.expenditure.entity.Consumption;
-import expenditure.expenditure.entity.ConsumptionHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
